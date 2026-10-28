@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gierka o Gierku</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="start-menu" class="start-menu">
+        <div class="start-panel">
+            <p class="start-kicker">Centralny Plan</p>
+            <h1>Gra o Gierku</h1>
+            <p id="start-save-info">Archiwum czeka na decyzję.</p>
+            <div class="start-actions">
+                <button id="start-continue-btn" type="button">Rozpocznij plan</button>
+                <button id="start-new-btn" type="button">Nowa gra</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <h1>Gierkoclicker: Budujemy Drugą Polskę!</h1>
+        
+        <div class="stats">
+            <p>Fundusze: <span id="score">0</span> zł</p>
+            <p>Zarabiasz: <span id="bps">0</span> zł / sek</p>
+            <p class="western-currency">Waluta zachodnia: <span id="western-currency">0.0</span> $</p>
+            <p class="prestige-currency">Punkty Prezydenta: <span id="pres-points">0</span> 👑</p>
+        </div>
+
+        <div class="policy-panel">
+            <h2>Podatki i ZSRR</h2>
+
+            <div class="policy-status">
+                <p>Polityka podatkowa: <strong id="tax-policy-name">Podatki na równo</strong></p>
+                <p>Premia do zarobków: <span id="tax-income-bonus">+0%</span></p>
+                <p>Ryzyko strajku: <span id="strike-risk">0.25% / sek</span></p>
+            </div>
+
+            <div class="tax-buttons">
+                <button id="tax-balanced-btn" class="policy-button active-policy" type="button">Podatki na równo</button>
+                <button id="tax-high-btn" class="policy-button" type="button">Wysokie podatki</button>
+            </div>
+
+            <p class="desc-spec">Wysokie podatki dają więcej pieniędzy, ale szybciej kończą się strajkiem.</p>
+
+            <div class="ussr-box">
+                <p>Danina dla ZSRR za: <strong id="ussr-timer">45</strong>s</p>
+                <p>Następna wpłata: <span id="ussr-tribute">50</span> zł</p>
+                <p id="ussr-status">Moskwa czeka na przelew.</p>
+                <button id="pay-ussr-btn" type="button" disabled>Zapłać daninę wcześniej</button>
+            </div>
+        </div>
+
+        <div id="chronicle-panel" class="chronicle-panel">
+            <h2>Kronika dnia</h2>
+            <p><strong id="event-name">Spokojny dzień w kraju</strong></p>
+            <p id="event-desc">Centrala obserwuje sytuację. Następny meldunek już w drodze.</p>
+            <p><span id="event-timer-label">Do następnego meldunku:</span> <strong id="event-timer">30</strong>s</p>
+            <p id="event-effect">Brak aktywnego efektu.</p>
+        </div>
+
+        <div class="map-panel">
+            <h2>Mapa planu</h2>
+            <div class="map-layout">
+                <div class="poland-map" aria-label="Mapa gospodarcza kraju">
+                    <button class="map-region coast" data-map-region="coast" type="button">
+                        <span>Wybrzeże</span>
+                        <strong id="map-coast-level">0</strong>
+                    </button>
+                    <button class="map-region capital" data-map-region="capital" type="button">
+                        <span>Mazowsze</span>
+                        <strong id="map-capital-level">0</strong>
+                    </button>
+                    <button class="map-region silesia" data-map-region="silesia" type="button">
+                        <span>Śląsk</span>
+                        <strong id="map-silesia-level">0</strong>
+                    </button>
+                    <button class="map-region malopolska" data-map-region="malopolska" type="button">
+                        <span>Małopolska</span>
+                        <strong id="map-malopolska-level">0</strong>
+                    </button>
+                    <button class="map-region south" data-map-region="south" type="button">
+                        <span>Podkarpacie</span>
+                        <strong id="map-south-level">0</strong>
+                    </button>
+                    <button class="map-region estates" data-map-region="west" type="button">
+                        <span>Wielkopolska</span>
+                        <strong id="map-west-level">0</strong>
+                    </button>
+                </div>
+
+                <div class="map-control-column">
+                    <div class="map-readout">
+                        <p><strong id="map-focus-title">Mazowsze</strong></p>
+                        <p id="map-focus-desc">Wybierz region i buduj wieś, miasto albo fabrykę.</p>
+                        <p>Aktywne regiony: <span id="active-regions-count">0</span> / 6</p>
+                        <div class="region-stats">
+                            <span>Wsie: <strong id="selected-villages-count">0</strong></span>
+                            <span>Miasta: <strong id="selected-cities-count">0</strong></span>
+                            <span>Fabryki: <strong id="selected-factories-count">0</strong></span>
+                            <span>PGR: <strong id="selected-pgrs-count">0</strong></span>
+                            <span>Hurtownie: <strong id="selected-warehouses-count">0</strong></span>
+                            <span>Sklepy: <strong id="selected-shops-count">0</strong></span>
+                            <span>Pewexy: <strong id="selected-pewexes-count">0</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="map-actions">
+                        <button id="build-village-btn" type="button">Buduj wieś (<span id="village-cost">250</span> zł)</button>
+                        <button id="build-city-btn" type="button">Buduj miasto (<span id="city-cost">1500</span> zł)</button>
+                        <button id="build-map-factory-btn" type="button">Kup fabrykę (<span id="map-factory-cost">750</span> zł)</button>
+                        <button id="build-pgr-btn" type="button">Dokup PGR (<span id="pgr-cost">600</span> zł)</button>
+                        <button id="build-warehouse-btn" type="button">Inwestuj w hurtownię (<span id="warehouse-cost">2500</span> zł)</button>
+                        <button id="build-shop-btn" type="button">Inwestuj w sklep (<span id="shop-cost">4500</span> zł)</button>
+                        <button id="build-pewex-btn" type="button">Otwórz Pewex (<span id="pewex-cost">12000</span> zł)</button>
+                    </div>
+
+                    <div id="western-panel" class="western-panel locked">
+                        <h3>Waluta zachodnia</h3>
+                        <p id="western-status">Zablokowana. Otwórz pierwszy Pewex, żeby zdobywać dolary.</p>
+                        <p>Napływ: <span id="western-income">0.0</span> $ / sek</p>
+                        <button id="buy-west-machines-btn" type="button" disabled>Importowane maszyny (<span id="west-machines-cost">5</span> $)</button>
+                        <button id="buy-west-license-btn" type="button" disabled>Licencja technologiczna (<span id="west-license-cost">12</span> $)</button>
+                        <button id="buy-west-credit-btn" type="button" disabled>Zachodni kredyt (<span id="west-credit-cost">25</span> $)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="strike-container" class="strike-box">
+            <h3>⚠️ STRAJK GENERALNY! ⚠️</h3>
+            <p>Robotnicy odeszli od stanowisk! Zyski spadły o 50%!</p>
+            <button id="resolve-strike-btn">Zgaś strajk podwyżkami (Koszt: <span id="strike-cost">0</span> zł)</button>
+        </div>
+
+        <button id="click-btn">Pomożecie? (+1 zł)</button>
+
+        <div class="prestige-section">
+            <h2>Komitet Centralny & Wybory</h2>
+            <p>Możesz zresetować fabryki i kasę, aby zdobyć: <strong id="pending-points">0</strong> Punktów Prezydenta.</p>
+            <button id="prestige-btn" disabled>Ogłoś Nową Epokę (Wymaga 200 000 zł)</button>
+            
+            <div class="presidents-market">
+                <div class="president-card prl">
+                    <h3>Edward Gierek</h3>
+                    <p>Koszt: 1 👑 | Posiadasz: <span id="gierek-count">0</span></p>
+                    <p class="desc">Daje +5 zł za każde kliknięcie myszką.</p>
+                    <button id="buy-gierek-btn" disabled>Zatrudnij Gierka</button>
+                </div>
+
+                <div class="president-card prl">
+                    <h3>Wojciech Jaruzelski</h3>
+                    <p>Koszt: 5 👑 | Posiadasz: <span id="jaruzelski-count">0</span></p>
+                    <p class="desc">Zwiększa wydajność Robotników o +50%.</p>
+                    <button id="buy-jaruzelski-btn" disabled>Zatrudnij Jaruzelskiego</button>
+                </div>
+
+                <div class="president-card prl">
+                    <h3>Lech Wałęsa</h3>
+                    <p>Koszt: 15 👑 | Posiadasz: <span id="walesa-count">0</span></p>
+                    <p class="desc">Mnoży całkowite zyski na sekundę o +25%.</p>
+                    <button id="buy-walesa-btn" disabled>Zatrudnij Wałęsę</button>
+                </div>
+            </div>
+
+            <hr class="divider">
+            <button id="election-btn" disabled>Zorganizuj Wybory Prezydenckie (Koszt: 5 👑)</button>
+
+            <div id="modern-presidents-section" class="modern-section">
+                <h3>III Rzeczpospolita (Nowe Czasy)</h3>
+                <div class="presidents-market">
+                    <div class="president-card modern">
+                        <h3>Aleksander Kwaśniewski</h3>
+                        <p>Koszt: 3 👑 | Posiadasz: <span id="kwasniewski-count">0</span></p>
+                        <p class="desc">Zwiększa zyski z Kopalń i Hut o +50%.</p>
+                        <button id="buy-kwasniewski-btn" disabled>Wybierz Kwaśniewskiego</button>
+                    </div>
+
+                    <div class="president-card modern">
+                        <h3>Lech Kaczyński</h3>
+                        <p>Koszt: 6 👑 | Posiadasz: <span id="kaczynski-count">0</span></p>
+                        <p class="desc">Podwaja siłę każdego kliknięcia myszką.</p>
+                        <button id="buy-kaczynski-btn" disabled>Wybierz Kaczyńskiego</button>
+                    </div>
+
+                    <div class="president-card modern">
+                        <h3>Andrzej Duda</h3>
+                        <p>Koszt: 10 👑 | Posiadasz: <span id="duda-count">0</span></p>
+                        <p class="desc">Zwiększa zyski z Ursusów, Fiatów i Wielkiej Płyty o +30%.</p>
+                        <button id="buy-duda-btn" disabled>Wybierz Dudę</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="shop">
+            <h2>Sklep (Centralny Plan)</h2>
+
+            <div class="upgrade special-upgrade">
+                <button id="buy-opposition-btn" disabled>Zalegalizuj Opozycję (<span id="opposition-cost">50000</span> zł)</button>
+                <p>Status: <strong id="opposition-status">Nielegalna</strong></p>
+                <p class="desc-spec">(+50% do globalnego dochodu, ale ryzyko wybuchu strajków!)</p>
+            </div>
+            
+            <div class="upgrade">
+                <button id="buy-worker-btn" disabled>Kup Robotnika (<span id="worker-cost">10</span> zł)</button>
+                <p>Ilość: <span id="workers-count">0</span> (Baza: +1 zł/s)</p>
+            </div>
+
+            <div class="upgrade">
+                <button id="buy-ursus-btn" disabled>Zakłady Ursus (<span id="ursus-cost">100</span> zł)</button>
+                <p>Ilość: <span id="ursuses-count">0</span> (+10 zł/s)</p>
+            </div>
+
+            <div class="upgrade">
+                <button id="buy-mine-btn" disabled>Kopalnia Węgla (<span id="mine-cost">1000</span> zł)</button>
+                <p>Ilość: <span id="mines-count">0</span> (+100 zł/s)</p>
+            </div>
+
+            <div class="upgrade">
+                <button id="buy-steelwork-btn" disabled>Huta Stali (<span id="steelwork-cost">5000</span> zł)</button>
+                <p>Ilość: <span id="steelworks-count">0</span> (+400 zł/s)</p>
+            </div>
+
+            <div class="upgrade">
+                <button id="buy-fiat-btn" disabled>Linia Fiata 126p (<span id="fiat-cost">10000</span> zł)</button>
+                <p>Ilość: <span id="fiats-count">0</span> (+1 000 zł/s)</p>
+            </div>
+
+            <div class="upgrade">
+                <button id="buy-block-btn" disabled>Fabryka Wielkiej Płyty (<span id="block-cost">100000</span> zł)</button>
+                <p>Ilość: <span id="blocks-count">0</span> (+10 000 zł/s)</p>
+            </div>
+        </div>
+
+        <div class="save-controls">
+            <button id="save-btn">💾 Zapisz grę</button>
+            <button id="reset-btn">⚠️ Resetuj postęp</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
